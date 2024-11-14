@@ -6,7 +6,7 @@ import { PAGE_URL, paths } from "@/configs";
 import MainStore from "@/stores/MainStore";
 
 const MainPage = () => {
-  const { diameter, background, start, click, grapple } = MainStore();
+  const { diameter, background, start, click, grapple, finish } = MainStore();
 
   const navigate = useNavigate();
 
@@ -93,7 +93,11 @@ const MainPage = () => {
             Math.pow(position.y - moverCenterY, 2)
         );
 
-        return distance > 15 + diameter / 2;
+        const result = distance > 15 + diameter / 2;
+
+        if (!result) grapple();
+
+        return result;
       })
     );
   };
@@ -111,9 +115,10 @@ const MainPage = () => {
   ).length;
 
   useEffect(() => {
-    if (!visibleMovers.find((element) => element === true))
+    if (!visibleMovers.find((element) => element === true)) {
+      finish();
       navigate(PAGE_URL.Result);
-    grapple();
+    }
   }, [visibleMovers]);
 
   return (
@@ -122,6 +127,7 @@ const MainPage = () => {
       {currentSteps.map((step, index) =>
         visibleMovers[index] ? (
           <Mover
+            src={`image/mosquito${index + 1}.png`}
             key={index}
             style={{
               left: `${paths[index][step].x}%`,
@@ -159,11 +165,11 @@ const Follower = styled.div`
   z-index: 99;
 `;
 
-const Mover = styled.div`
+const Mover = styled.img`
   position: absolute;
   width: 30px; /* 크기 증가 */
   height: 30px;
-  background-color: blue;
+  border: 2px solid#0000004c;
   border-radius: 50%;
   transition: all 0.3s ease;
   z-index: 2;

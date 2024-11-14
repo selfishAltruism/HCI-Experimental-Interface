@@ -1,5 +1,3 @@
-const KEY = "DATA";
-
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 
@@ -52,36 +50,25 @@ const MainStore = create<Main.Store>()(
 
     grapple: () => {
       set((state) => {
-        if (state.grappleTimes.length > 3) {
-          const time = Date.now();
-          state.grappleTimes.push(time - state.startTime);
-          state.totalTime = time - state.startTime;
+        state.grappleTimes.push(Date.now() - state.startTime);
+      });
+    },
 
-          const previousData = localStorage.getItem(KEY);
+    finish: () => {
+      set((state) => {
+        const time = Date.now();
+        state.totalTime = state.grappleTimes[4];
 
-          if (previousData) {
-            const data = JSON.parse(previousData).push({
-              diameter: state.diameter,
-              background: state.background,
-              grappleTimes: state.grappleTimes,
-              totalTime: state.totalTime,
-              totalClicks: state.totalClicks,
-            });
-            localStorage.removeItem(KEY);
-            localStorage.setItem(KEY, JSON.stringify(data));
-          } else {
-            const data = [
-              {
-                diameter: state.diameter,
-                background: state.background,
-                grappleTimes: state.grappleTimes,
-                totalTime: state.totalTime,
-                totalClicks: state.totalClicks,
-              },
-            ];
-            localStorage.setItem(KEY, JSON.stringify(data));
-          }
-        } else state.grappleTimes.push(Date.now() - state.startTime);
+        localStorage.setItem(
+          time + "",
+          JSON.stringify({
+            diameter: state.diameter,
+            background: state.background,
+            grappleTimes: state.grappleTimes,
+            totalTime: state.totalTime,
+            totalClicks: state.totalClicks,
+          })
+        );
       });
     },
   }))

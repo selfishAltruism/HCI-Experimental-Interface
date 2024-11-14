@@ -18,7 +18,7 @@ const ControlPage = () => {
       <h2>현재 설정값</h2>
       <SubWrapper>
         <span>[모기 크기] {diameter}px</span>
-        <span>[배경화면 색] {background}</span>
+        <span>[배경 화면] {background}</span>
         <Button
           onClick={() => {
             navigate("/");
