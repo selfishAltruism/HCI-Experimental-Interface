@@ -5,7 +5,7 @@ import { colors } from "@/configs";
 export const Loading = () => {
   return (
     <>
-      <BeatLoader color={colors.navy} size={30} speedMultiplier={1} />
+      <BeatLoader color={colors.black} size={30} speedMultiplier={1} />
     </>
   );
 };

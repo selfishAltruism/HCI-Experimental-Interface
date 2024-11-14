@@ -1,47 +1,15 @@
 import { useState, useEffect } from "react";
 import styled from "@emotion/styled";
-import { paths } from "@/configs";
+import { useNavigate } from "react-router";
 
-const Container = styled.div`
-  width: 100vw;
-  height: 100vh;
-  cursor: none;
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
+import { PAGE_URL, paths } from "@/configs";
+import MainStore from "@/stores/MainStore";
 
-const Follower = styled.div`
-  position: absolute;
-  width: 30px; /* 크기 증가 */
-  height: 30px;
-  background-color: red;
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  z-index: 99;
-`;
+const MainPage = () => {
+  const { diameter, background, start, click, grapple } = MainStore();
 
-const Mover = styled.div`
-  position: absolute;
-  width: 30px; /* 크기 증가 */
-  height: 30px;
-  background-color: blue;
-  border-radius: 50%;
-  transition: all 0.5s ease;
-  z-index: 2;
-`;
+  const navigate = useNavigate();
 
-const Counter = styled.div`
-  position: absolute;
-  font-size: 24px;
-  color: #00000057;
-  font-weight: bold;
-`;
-
-function MainPage() {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [currentSteps, setCurrentSteps] = useState([0, 0, 0, 0, 0]);
   const [visibleMovers, setVisibleMovers] = useState([
@@ -53,6 +21,7 @@ function MainPage() {
   ]);
 
   useEffect(() => {
+    start();
     const handleMouseMove = (event) => {
       requestAnimationFrame(() => {
         setPosition({ x: event.clientX, y: event.clientY });
@@ -106,6 +75,7 @@ function MainPage() {
   // 마우스 좌클릭 이벤트 핸들러
   const handleLeftClick = (event) => {
     event.preventDefault();
+    click();
 
     setVisibleMovers((prevVisible) =>
       prevVisible.map((isVisible, index) => {
@@ -115,15 +85,15 @@ function MainPage() {
         const moverX = (moverPosition.x * window.innerWidth) / 100;
         const moverY = (moverPosition.y * window.innerHeight) / 100;
 
-        const moverCenterX = moverX + 15;
-        const moverCenterY = moverY + 15;
+        const moverCenterX = moverX + diameter / 2;
+        const moverCenterY = moverY + diameter / 2;
 
         const distance = Math.sqrt(
           Math.pow(position.x - moverCenterX, 2) +
             Math.pow(position.y - moverCenterY, 2)
         );
 
-        return distance > 30;
+        return distance > 15 + diameter / 2;
       })
     );
   };
@@ -140,8 +110,14 @@ function MainPage() {
     (isVisible) => isVisible
   ).length;
 
+  useEffect(() => {
+    if (!visibleMovers.find((element) => element === true))
+      navigate(PAGE_URL.Result);
+    grapple();
+  }, [visibleMovers]);
+
   return (
-    <Container>
+    <Container style={{ backgroundColor: background }}>
       <Follower style={{ left: `${position.x}px`, top: `${position.y}px` }} />
       {currentSteps.map((step, index) =>
         visibleMovers[index] ? (
@@ -150,6 +126,8 @@ function MainPage() {
             style={{
               left: `${paths[index][step].x}%`,
               top: `${paths[index][step].y}%`,
+              height: diameter + "px",
+              width: diameter + "px",
             }}
           />
         ) : null
@@ -157,6 +135,45 @@ function MainPage() {
       <Counter>{remainingMoversCount}마리 남았습니다!</Counter>{" "}
     </Container>
   );
-}
+};
+
+const Container = styled.div`
+  width: 100vw;
+  height: 100vh;
+  cursor: none;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const Follower = styled.div`
+  position: absolute;
+  width: 30px; /* 크기 증가 */
+  height: 30px;
+  background-color: red;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 99;
+`;
+
+const Mover = styled.div`
+  position: absolute;
+  width: 30px; /* 크기 증가 */
+  height: 30px;
+  background-color: blue;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  z-index: 2;
+`;
+
+const Counter = styled.div`
+  position: absolute;
+  font-size: 24px;
+  color: #00000057;
+  font-weight: bold;
+`;
 
 export default MainPage;
