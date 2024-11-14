@@ -9,6 +9,7 @@ import { Loading } from "@/entities";
 const Start = lazy(() => import("@/pages/StartPage"));
 const Main = lazy(() => import("@/pages/MainPage"));
 const Control = lazy(() => import("@/pages/ControlPage"));
+const Result = lazy(() => import("@/pages/ResultPage"));
 
 const PageRouter = () => (
   <Suspense fallback={<Loading />}>
@@ -17,6 +18,7 @@ const PageRouter = () => (
       <Routes>
         <Route path={PAGE_URL.Main} element={<Main />} />
         <Route path={PAGE_URL.Control} element={<Control />} />
+        <Route path={PAGE_URL.Result} element={<Result />} />
         <Route path="*" element={<Start />} />
       </Routes>
     </RootRouter>
