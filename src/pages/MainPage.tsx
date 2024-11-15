@@ -53,7 +53,7 @@ const MainPage = () => {
         (prevSteps[3] + 1) % paths[3].length,
         prevSteps[4],
       ]);
-    }, 1000);
+    }, 1400);
 
     const interval3 = setInterval(() => {
       setCurrentSteps((prevSteps) => [
@@ -63,7 +63,7 @@ const MainPage = () => {
         prevSteps[3],
         (prevSteps[4] + 1) % paths[4].length,
       ]);
-    }, 1200);
+    }, 1600);
 
     return () => {
       clearInterval(interval1);
@@ -93,7 +93,7 @@ const MainPage = () => {
             Math.pow(position.y - moverCenterY, 2)
         );
 
-        const result = distance > 15 + diameter / 2;
+        const result = distance > 25 + diameter / 2;
 
         if (!result) grapple();
 
@@ -123,7 +123,10 @@ const MainPage = () => {
 
   return (
     <Container style={{ backgroundColor: background }}>
-      <Follower style={{ left: `${position.x}px`, top: `${position.y}px` }} />
+      <Follower
+        src="image/catcher.png"
+        style={{ left: `${position.x}px`, top: `${position.y}px` }}
+      />
       {currentSteps.map((step, index) =>
         visibleMovers[index] ? (
           <Mover
@@ -154,12 +157,12 @@ const Container = styled.div`
   align-items: center;
 `;
 
-const Follower = styled.div`
+const Follower = styled.img`
   position: absolute;
-  width: 30px; /* 크기 증가 */
-  height: 30px;
-  background-color: red;
-  border-radius: 50%;
+  width: 90px; /* 크기 증가 */
+  height: 90px;
+  //border: 2px solid#0000004c;
+  //border-radius: 50%;
   transform: translate(-50%, -50%);
   pointer-events: none;
   z-index: 99;
@@ -171,7 +174,7 @@ const Mover = styled.img`
   height: 30px;
   border: 2px solid#0000004c;
   border-radius: 50%;
-  transition: all 0.3s ease;
+  transition: all 0.1s ease;
   z-index: 2;
 `;
 

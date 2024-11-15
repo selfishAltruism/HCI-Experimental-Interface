@@ -58,7 +58,7 @@ const ControlPage = () => {
             setBackground("white");
           }}
         >
-          WHITE
+          흰색
         </Button>
         <Button
           onClick={() => {

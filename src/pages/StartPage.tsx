@@ -11,6 +11,7 @@ const StartPage = () => {
       <h1>모기 잡기 게임</h1>
 
       <h2>피실험자</h2>
+      <span>"A"를 클릭하여 게임 시작</span>
       <Start>
         <span>ST</span>
         <Link to={PAGE_URL.Main}>A</Link>
@@ -34,6 +35,11 @@ const Wrapper = styled.div`
 
   * {
     width: 100%;
+  }
+
+  > span {
+    text-align: center;
+    color: gray;
   }
 
   > h2 {
