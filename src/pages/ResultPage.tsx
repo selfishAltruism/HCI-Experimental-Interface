@@ -47,6 +47,7 @@ const Wrapper = styled.div`
 
   * {
     width: 100%;
+    text-align: center;
   }
 
   > h2 {

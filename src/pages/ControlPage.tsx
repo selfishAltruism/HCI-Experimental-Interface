@@ -69,17 +69,10 @@ const ControlPage = () => {
         </Button>
         <Button
           onClick={() => {
-            setBackground("#8C8184");
-          }}
-        >
-          유사색A
-        </Button>
-        <Button
-          onClick={() => {
             setBackground("#BC4B55");
           }}
         >
-          유사색B
+          유사색
         </Button>
       </SubWrapper>
     </Wrapper>
