@@ -2,8 +2,9 @@ import { useState, useEffect } from "react";
 import styled from "@emotion/styled";
 import { useNavigate } from "react-router";
 
-import { PAGE_URL, paths } from "@/configs";
+import { PAGE_URL } from "@/configs";
 import MainStore from "@/stores/MainStore";
+import { Mosquito } from "@/entities";
 
 const MainPage = () => {
   const { diameter, background, start, click, grapple, finish } = MainStore();
@@ -11,7 +12,6 @@ const MainPage = () => {
   const navigate = useNavigate();
 
   const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [currentSteps, setCurrentSteps] = useState([0, 0, 0, 0, 0]);
   const [visibleMovers, setVisibleMovers] = useState([
     true,
     true,
@@ -34,45 +34,6 @@ const MainPage = () => {
     };
   }, []);
 
-  useEffect(() => {
-    const interval1 = setInterval(() => {
-      setCurrentSteps((prevSteps) => [
-        (prevSteps[0] + 1) % paths[0].length,
-        (prevSteps[1] + 1) % paths[1].length,
-        prevSteps[2],
-        prevSteps[3],
-        prevSteps[4],
-      ]);
-    }, 1500);
-
-    const interval2 = setInterval(() => {
-      setCurrentSteps((prevSteps) => [
-        prevSteps[0],
-        prevSteps[1],
-        (prevSteps[2] + 1) % paths[2].length,
-        (prevSteps[3] + 1) % paths[3].length,
-        prevSteps[4],
-      ]);
-    }, 1400);
-
-    const interval3 = setInterval(() => {
-      setCurrentSteps((prevSteps) => [
-        prevSteps[0],
-        prevSteps[1],
-        prevSteps[2],
-        prevSteps[3],
-        (prevSteps[4] + 1) % paths[4].length,
-      ]);
-    }, 1600);
-
-    return () => {
-      clearInterval(interval1);
-      clearInterval(interval2);
-      clearInterval(interval3);
-    };
-  }, []);
-
-  // 마우스 좌클릭 이벤트 핸들러
   const handleLeftClick = (event) => {
     event.preventDefault();
     click();
@@ -81,19 +42,17 @@ const MainPage = () => {
       prevVisible.map((isVisible, index) => {
         if (!isVisible) return false;
 
-        const moverPosition = paths[index][currentSteps[index]];
-        const moverX = (moverPosition.x * window.innerWidth) / 100;
-        const moverY = (moverPosition.y * window.innerHeight) / 100;
-
-        const moverCenterX = moverX + diameter / 2;
-        const moverCenterY = moverY + diameter / 2;
+        const moverElement = document.getElementById(`random-mover-${index}`);
+        const rect = moverElement.getBoundingClientRect();
+        const moverCenterX = rect.left + rect.width / 2;
+        const moverCenterY = rect.top + rect.height / 2;
 
         const distance = Math.sqrt(
           Math.pow(position.x - moverCenterX, 2) +
             Math.pow(position.y - moverCenterY, 2)
         );
 
-        const result = distance > 25 + diameter / 2;
+        const result = distance > 30 + diameter / 2;
 
         if (!result) grapple();
 
@@ -107,9 +66,8 @@ const MainPage = () => {
     return () => {
       window.removeEventListener("click", handleLeftClick);
     };
-  }, [position, currentSteps]);
+  }, [position]);
 
-  // 클릭되지 않은 원의 수 계산
   const remainingMoversCount = visibleMovers.filter(
     (isVisible) => isVisible
   ).length;
@@ -123,21 +81,16 @@ const MainPage = () => {
 
   return (
     <Container style={{ backgroundColor: background }}>
-      <Follower
-        src="image/catcher.png"
-        style={{ left: `${position.x}px`, top: `${position.y}px` }}
-      />
-      {currentSteps.map((step, index) =>
-        visibleMovers[index] ? (
-          <Mover
-            src={`image/mosquito${index + 1}.png`}
+      <Follower style={{ left: `${position.x}px`, top: `${position.y}px` }}>
+        <FollowerImg src="image/catcher.png"></FollowerImg>
+      </Follower>
+      {visibleMovers.map((isVisible, index) =>
+        isVisible ? (
+          <Mosquito
             key={index}
-            style={{
-              left: `${paths[index][step].x}%`,
-              top: `${paths[index][step].y}%`,
-              height: diameter + "px",
-              width: diameter + "px",
-            }}
+            id={`random-mover-${index}`}
+            index={index}
+            diameter={diameter}
           />
         ) : null
       )}
@@ -157,25 +110,26 @@ const Container = styled.div`
   align-items: center;
 `;
 
-const Follower = styled.img`
+const Follower = styled.div`
   position: absolute;
-  width: 90px; /* 크기 증가 */
-  height: 90px;
-  //border: 2px solid#0000004c;
-  //border-radius: 50%;
+  width: 60px;
+  height: 60px;
   transform: translate(-50%, -50%);
   pointer-events: none;
+
+  border-radius: 50px;
+  //border: 1px solid black;
   z-index: 99;
 `;
 
-const Mover = styled.img`
-  position: absolute;
-  width: 30px; /* 크기 증가 */
-  height: 30px;
-  border: 2px solid#0000004c;
-  border-radius: 50%;
-  transition: all 0.1s ease;
-  z-index: 2;
+const FollowerImg = styled.img`
+  position: relative;
+  top: 2px;
+  left: 2px;
+
+  width: 70px;
+  height: 70px;
+  pointer-events: none;
 `;
 
 const Counter = styled.div`
