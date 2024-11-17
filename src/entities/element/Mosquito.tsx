@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 
 export const Mosquito = ({ id, index, diameter }) => {
-  const speed = 0;
+  const speed = 7;
   const elementWidth = diameter;
   const elementHeight = diameter;
 
