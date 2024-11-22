@@ -6,15 +6,14 @@ import { colors } from "@/configs";
 export const Loading = () => {
   return (
     <Wrapper>
-      <BeatLoader color={colors.black} size={30} speedMultiplier={1} />
+      <BeatLoader color={colors.black} size={20} speedMultiplier={1} />
     </Wrapper>
   );
 };
 
 const Wrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  width: 100vw;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 `;
