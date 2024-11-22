@@ -8,6 +8,7 @@ declare namespace Main {
     totalTime: number;
     totalClicks: number;
 
+    setClick: (num: number) => void;
     reset: () => void;
     setDiameter: (data: number) => void;
     setBackground: (data: string) => void;

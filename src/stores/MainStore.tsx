@@ -12,6 +12,12 @@ const MainStore = create<Main.Store>()(
 
     totalClicks: 0,
 
+    setClick: (num) => {
+      set(() => ({
+        totalClicks: num,
+      }));
+    },
+
     reset: () => {
       set(() => ({
         diameter: 30,

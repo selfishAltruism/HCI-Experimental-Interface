@@ -7,7 +7,8 @@ import MainStore from "@/stores/MainStore";
 import { Mosquito } from "@/entities";
 
 const MainPage = () => {
-  const { diameter, background, start, click, grapple, finish } = MainStore();
+  const { diameter, background, start, click, grapple, finish, setClick } =
+    MainStore();
 
   const navigate = useNavigate();
 
@@ -24,6 +25,7 @@ const MainPage = () => {
 
   useEffect(() => {
     gameId.current = Date.now();
+    setClick(0);
     start();
     const handleMouseMove = (event) => {
       requestAnimationFrame(() => {
