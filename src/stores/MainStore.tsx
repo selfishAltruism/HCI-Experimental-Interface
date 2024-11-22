@@ -54,13 +54,13 @@ const MainStore = create<Main.Store>()(
       });
     },
 
-    finish: () => {
+    finish: (id) => {
       set((state) => {
-        const time = Date.now();
+        const key = "GAME-" + id;
         state.totalTime = state.grappleTimes[4];
 
         localStorage.setItem(
-          time + "",
+          key,
           JSON.stringify({
             diameter: state.diameter,
             background: state.background,

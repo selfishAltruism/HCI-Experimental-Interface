@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import styled from "@emotion/styled";
 import { useNavigate } from "react-router";
 
@@ -20,7 +20,10 @@ const MainPage = () => {
     true,
   ]);
 
+  const gameId = useRef(0);
+
   useEffect(() => {
+    gameId.current = Date.now();
     start();
     const handleMouseMove = (event) => {
       requestAnimationFrame(() => {
@@ -38,6 +41,9 @@ const MainPage = () => {
     event.preventDefault();
     click();
 
+    const key = "USER-" + gameId.current + "-" + Date.now();
+    localStorage.setItem(key, JSON.stringify({ x: position.x, y: position.y }));
+
     setVisibleMovers((prevVisible) =>
       prevVisible.map((isVisible, index) => {
         if (!isVisible) return false;
@@ -46,6 +52,13 @@ const MainPage = () => {
         const rect = moverElement.getBoundingClientRect();
         const moverCenterX = rect.left + rect.width / 2;
         const moverCenterY = rect.top + rect.height / 2;
+
+        const key =
+          "MOSQUITO" + index + "-" + gameId.current + "-" + Date.now();
+        localStorage.setItem(
+          key,
+          JSON.stringify({ x: moverCenterX, y: moverCenterY })
+        );
 
         const distance = Math.sqrt(
           Math.pow(position.x - moverCenterX, 2) +
@@ -74,7 +87,7 @@ const MainPage = () => {
 
   useEffect(() => {
     if (!visibleMovers.find((element) => element === true)) {
-      finish();
+      finish(gameId.current);
       navigate(PAGE_URL.Result);
     }
   }, [visibleMovers]);

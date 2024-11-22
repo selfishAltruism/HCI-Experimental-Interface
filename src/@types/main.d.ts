@@ -14,6 +14,6 @@ declare namespace Main {
     start: () => void;
     click: () => void;
     grapple: () => void;
-    finish: () => void;
+    finish: (id: number) => void;
   }
 }
