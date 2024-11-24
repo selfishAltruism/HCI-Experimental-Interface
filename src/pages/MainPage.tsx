@@ -43,7 +43,9 @@ const MainPage = () => {
     event.preventDefault();
     click();
 
-    const key = "USER-" + gameId.current + "-" + Date.now();
+    const clickId = Date.now();
+
+    const key = "USER-" + gameId.current + "-" + clickId;
     localStorage.setItem(key, JSON.stringify({ x: position.x, y: position.y }));
 
     setVisibleMovers((prevVisible) =>
@@ -56,7 +58,7 @@ const MainPage = () => {
         const moverCenterY = rect.top + rect.height / 2;
 
         const key =
-          "MOSQUITO" + index + "-" + gameId.current + "-" + Date.now();
+          "MOSQUITO" + index + "-" + gameId.current + "-" + clickId;
         localStorage.setItem(
           key,
           JSON.stringify({ x: moverCenterX, y: moverCenterY })
